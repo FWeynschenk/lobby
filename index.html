@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Game Lobby</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Arcade Lobby</h1>
+            <div class="user-profile">
+                <span>👤</span>
+                <input type="text" id="display-name" placeholder="Enter Name" maxlength="15">
+                <span id="player-id-display" style="font-size: 0.8rem; color: var(--text-secondary); margin-left: 0.5rem;"></span>
+            </div>
+        </header>
+
+        <main>
+            <div id="games-grid" class="games-grid">
+                <!-- Games will be injected here -->
+            </div>
+        </main>
+    </div>
+
+    <div id="queue-status" class="queue-status">
+        <div class="spinner"></div>
+        <span id="queue-msg">Searching for match...</span>
+        <button id="cancel-queue" style="margin-left: 1rem; padding: 0.5rem; background: rgba(255,255,255,0.1); border: none; color: white; cursor: pointer; border-radius: 4px;">Cancel</button>
+    </div>
+
+    <script type="module" src="/lobby.js"></script>
+</body>
+</html>
