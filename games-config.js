@@ -3,7 +3,7 @@ export const gamesConfig = [
         id: 'test-game',
         name: 'Test Game',
         description: 'A simple game to test connectivity and lobby functionality.',
-        location: '/games/test-game/index.html',
+        location: 'games/test-game/index.html',
         variants: [
             {
                 id: 'pvp',
@@ -29,7 +29,7 @@ export const gamesConfig = [
         id: 'connect4',
         name: 'Connect 4',
         description: 'Classic 4-in-a-row strategy game.',
-        location: '/games/connect4/index.html',
+        location: 'games/connect4/index.html',
         variants: [
             {
                 id: 'pvp',
