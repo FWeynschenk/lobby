@@ -442,6 +442,20 @@ function restartGame(swapSides = false) {
         myPlayerId = myPlayerId === 1 ? 2 : 1;
     }
 
+    // Update player card color classes for PvE
+    if (gameMode === 'pve') {
+        playerMeEl.classList.remove('is-p1', 'is-p2');
+        playerOpponentEl.classList.remove('is-p1', 'is-p2');
+
+        if (myPlayerId === 1) {
+            playerMeEl.classList.add('is-p1');
+            playerOpponentEl.classList.add('is-p2');
+        } else {
+            playerMeEl.classList.add('is-p2');
+            playerOpponentEl.classList.add('is-p1');
+        }
+    }
+
     currentPlayer = 1; // Always P1 starts
     gameActive = true;
     updateStatus();
