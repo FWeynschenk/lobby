@@ -20,6 +20,7 @@ const modalMessage = document.getElementById('modal-message');
 const modalRematchBtn = document.getElementById('modal-rematch-btn');
 const modalLobbyBtn = document.getElementById('modal-lobby-btn');
 const modalRematchIndicator = document.getElementById('modal-rematch-indicator');
+const difficultySelect = document.getElementById('difficulty-select');
 
 // Game State
 let board = [];
@@ -58,6 +59,10 @@ function init() {
     lobbyBtn.onclick = () => window.location.href = '../../index.html';
     modalLobbyBtn.onclick = () => window.location.href = '../../index.html';
 
+    difficultySelect.onchange = (e) => {
+        difficulty = e.target.value;
+    };
+
     // rematchBtn.onclick = handleRematchRequest; // Removed
     modalRematchBtn.onclick = handleRematchRequest;
 
@@ -73,6 +78,7 @@ function init() {
     createBoard();
 
     if (gameMode === 'pve') {
+        difficultySelect.classList.remove('hidden');
         startPvE();
     } else {
         if (!matchId) {
@@ -285,10 +291,7 @@ function handleCellClick(col) {
             sendMove(col);
         } else if (gameMode === 'pve') {
             // AI Turn
-            setTimeout(() => {
-                const aiMove = getBestMove(board, difficulty);
-                makeMove(aiMove, 2);
-            }, 500);
+            triggerAiTurn();
         }
     }
 }
@@ -442,7 +445,21 @@ function restartGame(swapSides = false) {
     currentPlayer = 1; // Always P1 starts
     gameActive = true;
     updateStatus();
+    updateStatus();
     updateActivePlayerCard();
+
+    if (gameMode === 'pve' && currentPlayer !== myPlayerId) {
+        triggerAiTurn();
+    }
+}
+
+function triggerAiTurn() {
+    if (!gameActive) return;
+    setTimeout(() => {
+        const aiPlayerId = myPlayerId === 1 ? 2 : 1;
+        const aiMove = getBestMove(board, difficulty, aiPlayerId);
+        makeMove(aiMove, aiPlayerId);
+    }, 500);
 }
 
 // Start

@@ -1,10 +1,11 @@
 const ROWS = 6;
 const COLS = 7;
 const EMPTY = 0;
-const PLAYER = 1;
-const AI = 2;
 
-export function getBestMove(board, difficulty) {
+export function getBestMove(board, difficulty, aiPlayerId = 2) {
+    const aiPiece = aiPlayerId;
+    const playerPiece = aiPlayerId === 1 ? 2 : 1;
+
     let depth;
     switch (difficulty) {
         case 'easy': depth = 2; break;
@@ -21,21 +22,21 @@ export function getBestMove(board, difficulty) {
         }
     }
 
-    const [score, col] = minimax(board, depth, -Infinity, Infinity, true);
+    const [score, col] = minimax(board, depth, -Infinity, Infinity, true, aiPiece, playerPiece);
     return col;
 }
 
-function minimax(board, depth, alpha, beta, maximizingPlayer) {
+function minimax(board, depth, alpha, beta, maximizingPlayer, aiPiece, playerPiece) {
     const validMoves = getValidMoves(board);
-    const isTerminal = isTerminalNode(board);
+    const isTerminal = isTerminalNode(board, aiPiece, playerPiece);
 
     if (depth === 0 || isTerminal) {
         if (isTerminal) {
-            if (checkWin(board, AI)) return [1000000, null];
-            if (checkWin(board, PLAYER)) return [-1000000, null];
+            if (checkWin(board, aiPiece)) return [1000000, null];
+            if (checkWin(board, playerPiece)) return [-1000000, null];
             return [0, null]; // Draw
         } else {
-            return [scorePosition(board, AI), null];
+            return [scorePosition(board, aiPiece, playerPiece), null];
         }
     }
 
@@ -47,8 +48,8 @@ function minimax(board, depth, alpha, beta, maximizingPlayer) {
 
         for (const col of validMoves) {
             const bCopy = board.map(row => [...row]);
-            dropPiece(bCopy, col, AI);
-            const [newScore] = minimax(bCopy, depth - 1, alpha, beta, false);
+            dropPiece(bCopy, col, aiPiece);
+            const [newScore] = minimax(bCopy, depth - 1, alpha, beta, false, aiPiece, playerPiece);
             if (newScore > value) {
                 value = newScore;
                 bestCol = col;
@@ -64,8 +65,8 @@ function minimax(board, depth, alpha, beta, maximizingPlayer) {
 
         for (const col of validMoves) {
             const bCopy = board.map(row => [...row]);
-            dropPiece(bCopy, col, PLAYER);
-            const [newScore] = minimax(bCopy, depth - 1, alpha, beta, true);
+            dropPiece(bCopy, col, playerPiece);
+            const [newScore] = minimax(bCopy, depth - 1, alpha, beta, true, aiPiece, playerPiece);
             if (newScore < value) {
                 value = newScore;
                 bestCol = col;
@@ -96,8 +97,8 @@ function dropPiece(board, col, piece) {
     }
 }
 
-function isTerminalNode(board) {
-    return checkWin(board, PLAYER) || checkWin(board, AI) || getValidMoves(board).length === 0;
+function isTerminalNode(board, aiPiece, playerPiece) {
+    return checkWin(board, playerPiece) || checkWin(board, aiPiece) || getValidMoves(board).length === 0;
 }
 
 function checkWin(board, piece) {
@@ -128,13 +129,13 @@ function checkWin(board, piece) {
     return false;
 }
 
-function scorePosition(board, piece) {
+function scorePosition(board, aiPiece, playerPiece) {
     let score = 0;
     const centerArray = [];
     for (let r = 0; r < ROWS; r++) {
         centerArray.push(board[r][3]);
     }
-    const centerCount = centerArray.filter(x => x === piece).length;
+    const centerCount = centerArray.filter(x => x === aiPiece).length;
     score += centerCount * 3;
 
     // Horizontal
@@ -142,7 +143,7 @@ function scorePosition(board, piece) {
         const rowArray = board[r];
         for (let c = 0; c < COLS - 3; c++) {
             const window = rowArray.slice(c, c + 4);
-            score += evaluateWindow(window, piece);
+            score += evaluateWindow(window, aiPiece, playerPiece);
         }
     }
 
@@ -154,7 +155,7 @@ function scorePosition(board, piece) {
         }
         for (let r = 0; r < ROWS - 3; r++) {
             const window = colArray.slice(r, r + 4);
-            score += evaluateWindow(window, piece);
+            score += evaluateWindow(window, aiPiece, playerPiece);
         }
     }
 
@@ -162,7 +163,7 @@ function scorePosition(board, piece) {
     for (let r = 0; r < ROWS - 3; r++) {
         for (let c = 0; c < COLS - 3; c++) {
             const window = [board[r][c], board[r + 1][c + 1], board[r + 2][c + 2], board[r + 3][c + 3]];
-            score += evaluateWindow(window, piece);
+            score += evaluateWindow(window, aiPiece, playerPiece);
         }
     }
 
@@ -170,19 +171,18 @@ function scorePosition(board, piece) {
     for (let r = 0; r < ROWS - 3; r++) {
         for (let c = 0; c < COLS - 3; c++) {
             const window = [board[r + 3][c], board[r + 2][c + 1], board[r + 1][c + 2], board[r][c + 3]];
-            score += evaluateWindow(window, piece);
+            score += evaluateWindow(window, aiPiece, playerPiece);
         }
     }
 
     return score;
 }
 
-function evaluateWindow(window, piece) {
+function evaluateWindow(window, aiPiece, playerPiece) {
     let score = 0;
-    const oppPiece = piece === PLAYER ? AI : PLAYER;
-    const pieceCount = window.filter(x => x === piece).length;
+    const pieceCount = window.filter(x => x === aiPiece).length;
     const emptyCount = window.filter(x => x === EMPTY).length;
-    const oppCount = window.filter(x => x === oppPiece).length;
+    const oppCount = window.filter(x => x === playerPiece).length;
 
     if (pieceCount === 4) {
         score += 100;

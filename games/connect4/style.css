@@ -217,6 +217,25 @@ button:active {
     border: 1px solid #cbd5e1;
 }
 
+#difficulty-select {
+    padding: 12px 24px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: white;
+    color: #475569;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.1s, box-shadow 0.2s;
+    outline: none;
+}
+
+#difficulty-select:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+}
+
 /* #rematch-btn removed */
 
 #surrender-btn {
