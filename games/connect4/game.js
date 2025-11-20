@@ -55,8 +55,8 @@ function init() {
     gameMode = variant === 'pve' ? 'pve' : 'pvp';
 
     // Setup UI
-    lobbyBtn.onclick = () => window.location.href = '/index.html';
-    modalLobbyBtn.onclick = () => window.location.href = '/index.html';
+    lobbyBtn.onclick = () => window.location.href = '../../index.html';
+    modalLobbyBtn.onclick = () => window.location.href = '../../index.html';
 
     // rematchBtn.onclick = handleRematchRequest; // Removed
     modalRematchBtn.onclick = handleRematchRequest;
