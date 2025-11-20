@@ -11,7 +11,7 @@ const statusEl = document.getElementById('status-display');
 const playerMeEl = document.getElementById('player-me');
 const playerOpponentEl = document.getElementById('player-opponent');
 const playerInfoEl = document.getElementById('player-info');
-const rematchBtn = document.getElementById('rematch-btn');
+// const rematchBtn = document.getElementById('rematch-btn'); // Removed
 const surrenderBtn = document.getElementById('surrender-btn');
 const lobbyBtn = document.getElementById('lobby-btn');
 const modalOverlay = document.getElementById('modal-overlay');
@@ -19,6 +19,7 @@ const modalTitle = document.getElementById('modal-title');
 const modalMessage = document.getElementById('modal-message');
 const modalRematchBtn = document.getElementById('modal-rematch-btn');
 const modalLobbyBtn = document.getElementById('modal-lobby-btn');
+const modalRematchIndicator = document.getElementById('modal-rematch-indicator');
 
 // Game State
 let board = [];
@@ -57,7 +58,7 @@ function init() {
     lobbyBtn.onclick = () => window.location.href = '/index.html';
     modalLobbyBtn.onclick = () => window.location.href = '/index.html';
 
-    rematchBtn.onclick = handleRematchRequest;
+    // rematchBtn.onclick = handleRematchRequest; // Removed
     modalRematchBtn.onclick = handleRematchRequest;
 
     surrenderBtn.onclick = () => {
@@ -86,15 +87,21 @@ function createBoard() {
     boardEl.innerHTML = '';
     board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
 
-    for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
+    for (let c = 0; c < COLS; c++) {
+        const column = document.createElement('div');
+        column.classList.add('column');
+        column.dataset.col = c;
+        column.onclick = () => handleCellClick(c);
+
+        for (let r = 0; r < ROWS; r++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
             cell.dataset.row = r;
             cell.dataset.col = c;
-            cell.onclick = () => handleCellClick(c);
-            boardEl.appendChild(cell);
+            // No click handler on cell needed, column handles it
+            column.appendChild(cell);
         }
+        boardEl.appendChild(column);
     }
 }
 
@@ -145,7 +152,7 @@ function startPvP(matchId) {
         modalTitle.textContent = "Opponent Disconnected";
         modalMessage.textContent = "The opponent has left the game.";
         modalOverlay.classList.remove('hidden');
-        rematchBtn.classList.add('hidden'); // Disable rematch
+        // rematchBtn.classList.add('hidden'); // Removed
         modalRematchBtn.classList.add('hidden');
     });
 
@@ -197,7 +204,8 @@ function startPvP(matchId) {
     getRematchAction((data, peerId) => {
         if (data.request) {
             opponentRematchRequested = true;
-            playerOpponentEl.querySelector('.rematch-indicator').classList.add('visible');
+            // playerOpponentEl.querySelector('.rematch-indicator').classList.add('visible'); // Removed old indicator
+            modalRematchIndicator.classList.add('visible'); // Show modal indicator
             statusEl.textContent = "Opponent wants a rematch!";
 
             if (myRematchRequested) {
@@ -220,8 +228,8 @@ function handleRematchRequest() {
     if (myRematchRequested) return; // Already requested
 
     myRematchRequested = true;
-    playerMeEl.querySelector('.rematch-indicator').classList.add('visible');
-    rematchBtn.textContent = "Waiting for Opponent...";
+    // playerMeEl.querySelector('.rematch-indicator').classList.add('visible'); // Removed
+    // rematchBtn.textContent = "Waiting for Opponent..."; // Removed
     modalRematchBtn.textContent = "Waiting...";
 
     if (sendRematch) {
@@ -240,9 +248,10 @@ function startRematch() {
     // Reset rematch state
     myRematchRequested = false;
     opponentRematchRequested = false;
-    playerMeEl.querySelector('.rematch-indicator').classList.remove('visible');
-    playerOpponentEl.querySelector('.rematch-indicator').classList.remove('visible');
-    rematchBtn.textContent = "Rematch";
+    // playerMeEl.querySelector('.rematch-indicator').classList.remove('visible'); // Removed
+    // playerOpponentEl.querySelector('.rematch-indicator').classList.remove('visible'); // Removed
+    modalRematchIndicator.classList.remove('visible');
+    // rematchBtn.textContent = "Rematch"; // Removed
     modalRematchBtn.textContent = "Rematch";
 
     // Swap sides logic
@@ -307,8 +316,11 @@ function makeMove(col, player) {
 }
 
 function updateBoardUI(row, col, player) {
-    const cell = boardEl.children[row * COLS + col];
+    const column = boardEl.children[col];
+    const cell = column.children[row];
     cell.classList.add(player === 1 ? 'p1' : 'p2');
+
+    // Optional: Add animation class here if we want drop animation later
 }
 
 function updateStatus() {
@@ -387,7 +399,7 @@ function endGame(winner, message) {
     modalTitle.textContent = message;
     modalMessage.textContent = winner === myPlayerId ? "Great job!" : "Better luck next time.";
     modalOverlay.classList.remove('hidden');
-    rematchBtn.classList.remove('hidden');
+    // rematchBtn.classList.remove('hidden'); // Removed
 }
 
 function updatePlayerInfo() {

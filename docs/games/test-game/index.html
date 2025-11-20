@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Game</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a20;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 { color: #646cff; }
+        .info { margin: 1rem 0; text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; }
+        .status { margin-top: 1rem; font-weight: bold; }
+        .chat-box {
+            height: 200px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 1rem 0;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        input {
+            width: 70%;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 4px;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            background: #646cff;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background: #747bff; }
+        .return-btn {
+            margin-top: 2rem;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .return-btn:hover { background: rgba(255,255,255,0.1); }
+    </style>
+  <script type="module" crossorigin src="../../assets/testGame-5LijrGcE.js"></script>
+  <link rel="modulepreload" crossorigin href="../../assets/nostr-w2LuTnN4.js">
+</head>
+<body>
+    <div class="container">
+        <h1>Test Game</h1>
+        <div class="info">
+            <div><strong>Match ID:</strong> <span id="match-id"></span></div>
+            <div><strong>Variant:</strong> <span id="variant-id"></span></div>
+            <div><strong>My ID:</strong> <span id="my-id"></span></div>
+            <div><strong>My Name:</strong> <span id="my-name"></span></div>
+        </div>
+        
+        <div class="status" id="connection-status">Connecting to peers...</div>
+        
+        <div class="chat-box" id="chat-box"></div>
+        
+        <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="msg-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
+
+        <button class="return-btn" onclick="window.location.href = '../../index.html'">Return to Lobby</button>
+    </div>
+
+</body>
+</html>
