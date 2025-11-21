@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Match Template</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="card">
+            <div class="header-top">
+                <div>
+                    <p class="eyebrow">Lobby Demo</p>
+                    <h1>Minimal Match Template</h1>
+                </div>
+                <div class="variant-pill" id="variant-pill">Variant</div>
+            </div>
+            <p class="muted" id="variant-note">Waiting for variant info...</p>
+            <div class="meta-grid">
+                <div>
+                    <span class="label">Match ID</span>
+                    <strong id="match-id">-</strong>
+                </div>
+                <div>
+                    <span class="label">Player</span>
+                    <strong id="player-name">-</strong>
+                </div>
+                <div>
+                    <span class="label">Variant ID</span>
+                    <strong id="variant-id">-</strong>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="card">
+                <div class="section-header">
+                    <h2>Scoreboard</h2>
+                    <span class="hint">Wins persist per opponent across rematches</span>
+                </div>
+                <div id="score-list" class="score-list">
+                    <!-- populated in JS -->
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-header">
+                    <h2>Match Controls</h2>
+                    <span class="hint">Drive the flow without real gameplay</span>
+                </div>
+                <div class="turn-row">
+                    <div class="turn-meta">
+                        <span class="label">Current Turn</span>
+                        <div class="turn-indicator" id="turn-indicator">Determining...</div>
+                    </div>
+                    <button id="end-turn-btn" class="secondary">Pass Turn</button>
+                </div>
+                <div class="controls-grid">
+                    <button id="win-btn" class="primary">I Won</button>
+                    <button id="surrender-btn" class="danger">Surrender</button>
+                    <button id="rematch-btn" class="secondary">Request Rematch</button>
+                </div>
+                <div class="status" id="match-status">Waiting for peers...</div>
+            </section>
+
+            <section class="card">
+                <div class="section-header">
+                    <h2>Event Log</h2>
+                    <button id="clear-log-btn" class="ghost small">Clear</button>
+                </div>
+                <div id="event-log" class="event-log"></div>
+            </section>
+        </main>
+
+        <footer>
+            <button id="back-btn" class="ghost full">Return to Lobby</button>
+        </footer>
+    </div>
+
+    <script type="module" src="./game.js"></script>
+</body>
+</html>
+

@@ -44,5 +44,51 @@ export const gamesConfig = [
                 players: 1
             }
         ]
+    },
+    {
+        id: 'minimal-template',
+        name: 'Minimal Template',
+        description: 'Button-only scaffold with scoring, surrender, and rematch.',
+        location: 'games/minimal-template/index.html',
+        variants: [
+            {
+                id: 'pve',
+                name: 'PvE',
+                description: 'Solo vs helper bot',
+                players: 1
+            },
+            {
+                id: '2p',
+                name: '2P PvP',
+                description: 'Head-to-head match',
+                players: 2
+            },
+            {
+                id: '3p',
+                name: '3P PvP',
+                description: 'Free-for-all (three players)',
+                players: 3
+            }
+        ]
+    },
+    {
+        id: 'hex',
+        name: 'Hex',
+        description: 'Classic abstract strategy game. Connect opposite sides to win!',
+        location: 'https://flwe.nl/hex/index-lobby.html',
+        variants: [
+            {
+                id: 'pve',
+                name: 'PvE (vs AI)',
+                description: 'Practice against AI opponents',
+                players: 1
+            },
+            {
+                id: 'pvp',
+                name: 'PvP',
+                description: 'Head-to-head match',
+                players: 2
+            }
+        ]
     }
 ];
