@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect 4</title>
-  <script type="module" crossorigin src="../../assets/connect4-BJw_sNEh.js"></script>
+  <script type="module" crossorigin src="../../assets/connect4-EVJ9hcbk.js"></script>
   <link rel="modulepreload" crossorigin href="../../assets/nostr-w2LuTnN4.js">
-  <link rel="stylesheet" crossorigin href="../../assets/connect4-OOFomnMJ.css">
+  <link rel="stylesheet" crossorigin href="../../assets/connect4-BLzxw8KJ.css">
 </head>
 <body>
     <div id="app">
@@ -35,11 +35,7 @@
         </main>
 
         <div id="controls">
-            <select id="difficulty-select" class="hidden">
-                <option value="easy">Easy</option>
-                <option value="medium" selected>Medium</option>
-                <option value="hard">Hard</option>
-            </select>
+            <button id="restart-btn" class="hidden">Restart</button>
             <button id="surrender-btn" class="hidden">Surrender</button>
             <button id="lobby-btn">Return to Lobby</button>
         </div>
@@ -52,6 +48,42 @@
                 <div class="modal-actions">
                     <button id="modal-rematch-btn">Rematch</button>
                     <button id="modal-lobby-btn">Lobby</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="pve-settings-modal" class="modal-overlay hidden">
+            <div class="modal">
+                <h2>Game Settings</h2>
+                <div class="form-group">
+                    <label for="pve-difficulty">Difficulty:</label>
+                    <select id="pve-difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Who Starts?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="starting-player" value="me" checked> Me</label>
+                        <label><input type="radio" name="starting-player" value="ai"> AI</label>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button id="start-pve-btn">Start Game</button>
+                    <button id="pve-lobby-btn">Lobby</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="surrender-modal" class="modal-overlay hidden">
+            <div class="modal">
+                <h2>Surrender?</h2>
+                <p>Are you sure you want to surrender this game?</p>
+                <div class="modal-actions">
+                    <button id="confirm-surrender-btn" class="danger-btn">Yes, Surrender</button>
+                    <button id="cancel-surrender-btn">Cancel</button>
                 </div>
             </div>
         </div>

@@ -22,6 +22,18 @@ const modalLobbyBtn = document.getElementById('modal-lobby-btn');
 const modalRematchIndicator = document.getElementById('modal-rematch-indicator');
 const difficultySelect = document.getElementById('difficulty-select');
 
+// PvE Elements
+const pveModal = document.getElementById('pve-settings-modal');
+const startPveBtn = document.getElementById('start-pve-btn');
+const pveLobbyBtn = document.getElementById('pve-lobby-btn');
+const pveDifficultySelect = document.getElementById('pve-difficulty');
+const restartBtn = document.getElementById('restart-btn');
+
+// Surrender Modal Elements
+const surrenderModal = document.getElementById('surrender-modal');
+const confirmSurrenderBtn = document.getElementById('confirm-surrender-btn');
+const cancelSurrenderBtn = document.getElementById('cancel-surrender-btn');
+
 // Game State
 let board = [];
 let currentPlayer = 1; // 1 or 2
@@ -58,9 +70,34 @@ function init() {
     // Setup UI
     lobbyBtn.onclick = () => window.location.href = '../../index.html';
     modalLobbyBtn.onclick = () => window.location.href = '../../index.html';
+    pveLobbyBtn.onclick = () => window.location.href = '../../index.html';
 
-    difficultySelect.onchange = (e) => {
-        difficulty = e.target.value;
+    startPveBtn.onclick = () => {
+        difficulty = pveDifficultySelect.value;
+        const startingPlayer = document.querySelector('input[name="starting-player"]:checked').value;
+
+        // Set opponent name based on difficulty
+        const difficultyLabel = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+        opponentName = `AI (${difficultyLabel})`;
+        opponentId = `ai-${difficulty}`; // Unique ID per difficulty for stats
+
+        pveModal.classList.add('hidden');
+
+        // Determine who starts
+        // If 'me' starts, I am P1. If 'ai' starts, I am P2.
+        if (startingPlayer === 'me') {
+            myPlayerId = 1;
+        } else {
+            myPlayerId = 2;
+        }
+
+        startPvE();
+    };
+
+    restartBtn.onclick = () => {
+        pveModal.classList.remove('hidden');
+        pveModal.style.display = 'flex'; // Ensure it's visible
+        gameActive = false;
     };
 
     // rematchBtn.onclick = handleRematchRequest; // Removed
@@ -68,18 +105,27 @@ function init() {
 
     surrenderBtn.onclick = () => {
         if (gameMode === 'pvp' && sendSurrender) {
-            if (confirm("Are you sure you want to surrender?")) {
-                sendSurrender({ surrender: true });
-                endGame(myPlayerId === 1 ? 2 : 1, "You surrendered."); // Opponent wins
-            }
+            surrenderModal.classList.remove('hidden');
         }
+    };
+
+    confirmSurrenderBtn.onclick = () => {
+        surrenderModal.classList.add('hidden');
+        if (gameMode === 'pvp' && sendSurrender) {
+            sendSurrender({ surrender: true });
+            endGame(myPlayerId === 1 ? 2 : 1, "You surrendered."); // Opponent wins
+        }
+    };
+
+    cancelSurrenderBtn.onclick = () => {
+        surrenderModal.classList.add('hidden');
     };
 
     createBoard();
 
     if (gameMode === 'pve') {
-        difficultySelect.classList.remove('hidden');
-        startPvE();
+        restartBtn.classList.remove('hidden');
+        pveModal.classList.remove('hidden'); // Show settings modal first
     } else {
         if (!matchId) {
             statusEl.textContent = 'Error: No match ID provided.';
@@ -112,17 +158,34 @@ function createBoard() {
 }
 
 function startPvE() {
+    // Reset board
+    createBoard();
     gameActive = true;
-    myPlayerId = 1; // Player is always 1 in PvE for now
-    currentPlayer = 1;
-    statusEl.textContent = "Your Turn";
-    playerInfoEl.classList.remove('hidden');
+    currentPlayer = 1; // P1 always starts the game logic
+
     updatePlayerInfo();
 
     // Apply color classes to player cards
-    playerMeEl.classList.add('is-p1');
-    playerOpponentEl.classList.add('is-p2');
+    playerMeEl.classList.remove('is-p1', 'is-p2');
+    playerOpponentEl.classList.remove('is-p1', 'is-p2');
+
+    if (myPlayerId === 1) {
+        playerMeEl.classList.add('is-p1');
+        playerOpponentEl.classList.add('is-p2');
+        statusEl.textContent = "Your Turn";
+    } else {
+        playerMeEl.classList.add('is-p2');
+        playerOpponentEl.classList.add('is-p1');
+        statusEl.textContent = `${opponentName}'s Turn`;
+    }
+
+    playerInfoEl.classList.remove('hidden');
     updateActivePlayerCard();
+
+    // If AI is P1 (myPlayerId is 2), trigger AI turn
+    if (myPlayerId === 2) {
+        triggerAiTurn();
+    }
 }
 
 function startPvP(matchId) {
@@ -227,7 +290,9 @@ function startPvP(matchId) {
 
 function handleRematchRequest() {
     if (gameMode === 'pve') {
-        restartGame(true);
+        // For PvE rematch, just reopen the settings modal
+        document.getElementById('pve-settings-modal').classList.remove('hidden');
+        modalOverlay.classList.add('hidden');
         return;
     }
 
